@@ -1,9 +1,0 @@
-function init(self)
-	self.time = 0; 
-end
-
-function update(self, dt)
-	self.time = self.time + dt;
-
-	go.set("/bg#sprite", "tint", vmath.vector4(35/255, 38/255, 42/255, 1))
-end

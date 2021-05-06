@@ -76,7 +76,7 @@ embedded_instances {
   }
 }
 embedded_instances {
-  id: "sparks"
+  id: "particles"
   data: "components {\n"
   "  id: \"builder\"\n"
   "  component: \"/zeroParticles/zpBuilder.script\"\n"
