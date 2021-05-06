@@ -5,7 +5,7 @@ go.property("active", true)
 
 function init(self)
 	self.msgs = require("zeroParticles/zpConsts")
-	self.time = 0;
+	self.time = self.emitTime;
 end
 
 function final(self)

@@ -3,7 +3,9 @@ go.property("target", vmath.vector3())
 go.property("duration", 1)
 go.property("amplitudeUnit", 0.5)
 go.property("amplitudeUnitRandom", 0.2)
+go.property("sinPhi", 0)
 go.property("sinWavesCount", 1)
+go.property("trailRotation", false)
 
 function init(self)
 	self.msgs = require("zeroParticles/zpConsts")
@@ -14,14 +16,21 @@ function init(self)
 	self.normalLerp = 0;
 	self.lerp = 0;
 	self.time = 0;
+	self.unitValue = 0;
 end
 
 function update(self, dt)
 	self.time = self.time + dt;
 	self.lerp = self.time / self.duration;
-	self.normalLerp = math.sin(self.time / self.duration * math.pi * self.sinWavesCount);
+	self.unitValue = math.pi * self.sinWavesCount / self.duration;
+	self.normalLerp = math.sin(self.sinPhi + self.time * self.unitValue);
 	self.pos = self.start + self.delta * self.lerp + self.normal * self.normalLerp;
 	go.set_position(self.pos);
+	if(self.trailRotation)then
+		local derivative = math.cos(self.time * self.unitValue);
+		local dir = self.delta * (1 - derivative * derivative) + derivative * self.normal;
+		go.set_rotation( vmath.quat_rotation_z( math.atan2(dir.y, dir.x)) );
+	end
 end
 
 function on_message(self, message_id, message, sender)

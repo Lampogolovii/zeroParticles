@@ -3,6 +3,26 @@ collection_instances {
   id: "sawScene"
   collection: "/main/scenes/sawScene.collection"
   position {
+    x: 123.0
+    y: 103.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "ufoScene"
+  collection: "/main/scenes/ufoScene.collection"
+  position {
     x: 300.0
     y: 200.0
     z: 0.0

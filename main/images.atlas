@@ -14,6 +14,14 @@ images {
   image: "/main/images/spark_2.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
+images {
+  image: "/main/images/ufo.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/main/images/ufo_plate.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
 margin: 1
 extrude_borders: 2
 inner_padding: 0
