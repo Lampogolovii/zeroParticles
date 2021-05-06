@@ -1,0 +1,46 @@
+go.property("shape", msg.url("#shape"))
+go.property("builder", msg.url("#builder"))
+go.property("count", 30)
+go.property("delay", 1)
+go.property("active", true)
+go.property("loop", false)
+
+function init(self)
+	self.msgs = require("zeroParticles/zpConsts")
+	self.time = 0;
+	self.emitterPosition = vmath.vector3();
+end
+
+function final(self)
+	self.active = false;
+end
+
+local function DoEmit(self, options)
+	local data = self.msgs.fillTable(options, {emitterPosition = go.get_world_position()});
+	for i = 1, self.count do
+		msg.post(self.shape, self.msgs.MSG_CALCPOSITION, data);
+	end
+end
+
+function update(self, dt)
+	if(self.active)then
+		self.time = self.time + dt;
+		if(self.time >= self.delay)then
+			DoEmit(self);
+			self.time = 0;
+			if(not self.loop)then
+				self.active = false;
+			end
+		end
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if(message_id == self.msgs.MSG_POSITIONCALCULATED)then
+		local particlePosition = message.position + message.emitterData.emitterPosition;
+		msg.post(self.builder, self.msgs.MSG_ADDPARTICLE, {position = particlePosition, emitterData = message.emitterData});
+		
+	elseif(message_id == self.msgs.MSG_EMIT)then
+		DoEmit( self, message );
+	end
+end

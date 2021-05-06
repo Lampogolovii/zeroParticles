@@ -1,0 +1,19 @@
+go.property("velocityScript", msg.url("#move"))
+go.property("min", vmath.vector3(0, 100, 0))
+go.property("max", vmath.vector3(0, 100, 0))
+
+function init(self)
+	local vel = vmath.vector3();
+	vel.x = self.min.x + (self.max.x - self.min.x) * math.random();
+	vel.y = self.min.y + (self.max.y - self.min.y) * math.random();
+	go.set(self.velocityScript, "velocity", vel);
+end
+
+function final(self)
+end
+
+function update(self, dt)
+end
+
+function on_message(self, message_id, message, sender)
+end

@@ -1,0 +1,42 @@
+go.property("factory", msg.url("#factory"))
+
+local function DoAddParticle(self, options)
+	local position = nil;
+	if(options)then
+		if(options.position)then
+			position = options.position;
+		end
+	end
+	local particle = {}
+	particle.URL = factory.create(self.factory, position);
+	msg.post(particle.URL, self.msgs.MSG_PARTICLE_OPTIONS, options.emitterData);
+	msg.post(particle.URL, self.msgs.MSG_PARTICLE_BUILDERDATA, {URL = msg.url(), index = #self.particles + 1});
+	msg.post(particle.URL, self.msgs.MSG_PARTICLE_INITED);
+	table.insert(self.particles, particle);
+end
+
+local function RemoveParticle(self, index)
+	table.remove( self.particles, index);
+end
+
+function init(self)
+	self.msgs = require("zeroParticles/zpConsts")
+	self.particles = {};
+end
+
+function final(self)
+end
+
+function update(self, dt)
+end
+
+function on_message(self, message_id, message, sender)
+	if(message_id == self.msgs.MSG_ADDPARTICLE)then
+		DoAddParticle(self, message);
+		
+	elseif(message_id == self.msgs.MSG_PARTICLEDELETED)then
+		RemoveParticle( self, message.index);
+
+	elseif(message_id == self.msgs.MSG_REMOVEPARTICLES)then
+	end
+end

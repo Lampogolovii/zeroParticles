@@ -1,0 +1,41 @@
+go.property("lifeDuration", 1)
+go.property("active", true)
+
+function init(self)
+	self.msgs = require("zeroParticles/zpConsts")
+	self.time = 0;
+end
+
+function final(self)
+	self.active = false;
+	self.time = 0;
+	self.builderData = nil;
+end
+
+local function DoSelfDelete(self)
+	if(self.builderData)then
+		msg.post(self.builderData.URL, self.msgs.MSG_PARTICLEDELETED, self.builderData);
+	end
+	go.delete(true);
+end
+
+function update(self, dt)
+	if(self.active)then
+		self.time = self.time + dt;
+		if(self.time >= self.lifeDuration)then
+			DoSelfDelete(self);
+		end
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if(message_id == self.msgs.MSG_PARTICLE_BUILDERDATA)then
+		self.builderData = message;
+
+	elseif(message_id == self.msgs.MSG_PARTICLE_OPTIONS)then
+		if(message.lifeDuration)then
+			self.lifeDuration = message.lifeDuration;
+		end
+		
+	end
+end

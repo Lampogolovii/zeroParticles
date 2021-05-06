@@ -1,0 +1,35 @@
+go.property("shape", msg.url("#shape"))
+go.property("builder", msg.url("#builder"))
+go.property("emitTime", 1)
+go.property("active", true)
+
+function init(self)
+	self.msgs = require("zeroParticles/zpConsts")
+	self.time = 0;
+end
+
+function final(self)
+	self.active = false;
+end
+
+local function DoEmit(self, options)
+	local data = self.msgs.fillTable(options, {emitterPosition = go.get_world_position()});
+	msg.post(self.shape, self.msgs.MSG_CALCPOSITION, data)
+end
+
+function update(self, dt)
+	if(self.active)then
+		self.time = self.time + dt;
+		if(self.time >= self.emitTime)then
+			self.time = 0;
+			DoEmit(self);
+		end
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if(message_id == self.msgs.MSG_POSITIONCALCULATED)then
+		local particlePosition = message.position + message.emitterData.emitterPosition;
+		msg.post(self.builder, self.msgs.MSG_ADDPARTICLE, {position = particlePosition, emitterData = message.emitterData});
+	end
+end

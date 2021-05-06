@@ -1,0 +1,38 @@
+go.property("start", vmath.vector3())
+go.property("target", vmath.vector3())
+go.property("duration", 1)
+go.property("amplitudeUnit", 0.5)
+go.property("amplitudeUnitRandom", 0.2)
+go.property("sinWavesCount", 1)
+
+function init(self)
+	self.msgs = require("zeroParticles/zpConsts")
+	self.start = nil;
+	self.normal = nil;
+	self.delta = nil;
+	self.pos = vmath.vector3();
+	self.normalLerp = 0;
+	self.lerp = 0;
+	self.time = 0;
+end
+
+function update(self, dt)
+	self.time = self.time + dt;
+	self.lerp = self.time / self.duration;
+	self.normalLerp = math.sin(self.time / self.duration * math.pi * self.sinWavesCount);
+	self.pos = self.start + self.delta * self.lerp + self.normal * self.normalLerp;
+	go.set_position(self.pos);
+end
+
+function on_message(self, message_id, message, sender)
+	if(message_id == self.msgs.MSG_PARTICLE_INITED)then
+		self.start = go.get_position();
+		self.delta = vmath.vector3(self.target.x - self.start.x, self.target.y - self.start.y, 0);
+		self.normal = vmath.vector3(self.delta.y, -self.delta.x, 0);
+		self.normal = self.normal * (self.amplitudeUnit + math.random() * self.amplitudeUnitRandom);
+		
+	elseif(message_id == self.msgs.MSG_PARTICLE_OPTIONS)then
+		if(message.target)then self.target = message.target; end
+		if(message.duration)then self.duration = message.duration; end
+	end
+end

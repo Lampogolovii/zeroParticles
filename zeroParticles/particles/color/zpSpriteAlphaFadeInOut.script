@@ -1,0 +1,38 @@
+go.property("target", msg.url("#sprite"))
+go.property("tint", true)
+go.property("color", false)
+
+go.property("startValue", 0)
+go.property("inDuration", 0.1)
+go.property("inValue", 1)
+go.property("pauseDuration", 0.3)
+go.property("outDuration", 0.5)
+go.property("outValue", 0)
+
+local function SetValue(self, value)
+	go.set(self.target, self.property, value);
+end
+
+function init(self)
+	self.msgs = require("zeroParticles/zpConsts")
+	
+	local constructor = require("zeroParticles/helpers/zpPLinearTween");
+	self.tweener = constructor.new( msg.url() );
+	self.tweener:setValues(self.startValue, self.inDuration, self.inValue, self.pauseDuration, self.outDuration, self.outValue);
+end
+
+function update(self, dt)
+	self.tweener:update( dt );
+	SetValue(self, self.tweener:currentValue());
+end
+
+function on_message(self, message_id, message, sender)
+	if(message_id == self.msgs.MSG_PARTICLE_INITED)then
+		if(self.tint)then
+			self.property = "tint.w";
+		elseif(self.color)then
+			self.property = "color.w";
+		end		
+		SetValue(self, self.startValue);
+	end
+end

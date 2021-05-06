@@ -1,0 +1,60 @@
+go.property("duration", 0.7)
+go.property("sprite", msg.url("#sprite"))
+go.property("index", 1)
+go.property("spriteSize", vmath.vector3(11, 11, 0))
+
+local function SetTint(self, color)
+	go.set(self.sprite, "tint", color);
+end
+
+function init(self)
+	self.msgs = require("zeroParticles/zpConsts")
+	self.vec = vmath.vector3();
+	self.aDuration = 1 / self.duration;
+	self.time = 0;
+	self.maxSize = 30;
+	self.thickness = 0;
+	self.size = 0;
+	self.spsize = vmath.vector3();
+	self.initPosition = nil;
+	self.spriteSize.x = 1 / self.spriteSize.x;
+	self.spriteSize.y = 1 / self.spriteSize.y;
+end
+
+local function SetScaleNPos(self, sx, sy, x, y)
+	self.vec.x = sx * self.spriteSize.x;
+	self.vec.y = sy * self.spriteSize.y;
+	self.vec.z = 1;
+	go.set_scale(self.vec, self.sprite);
+	self.vec.x = self.initPosition.x + x;
+	self.vec.y = self.initPosition.y + y;
+	self.vec.z = self.initPosition.z;
+	go.set_position(self.vec, self.sprite);
+end
+
+function update(self, dt)
+	self.time = self.time + dt;
+	self.size = (1 - 0.15 * self.duration / (self.time + 0.01)) * self.maxSize;
+	self.thickness = 40 * (1 - self.time * self.aDuration);
+	if(self.size < 0)then self.size = 0.001; end
+	if(self.thickness < 0)then self.thickness = 0.001; end
+
+	if(self.index == 1)then
+		SetScaleNPos( self, 2 * self.size, self.thickness, 0,  self.size);
+	elseif(self.index == 2)then
+		SetScaleNPos( self, self.thickness, 2 * self.size, -self.size, 0);
+	elseif(self.index == 3)then
+		SetScaleNPos( self, self.thickness, 2 * self.size,  self.size, 0);
+	elseif(self.index == 4)then
+		SetScaleNPos( self, 2 * self.size, self.thickness, 0, -self.size);
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if(message_id == self.msgs.MSG_PARTICLE_OPTIONS)then
+		if(message.value)then self.index = message.value; end
+		if(message.emitterPosition)then self.initPosition = message.emitterPosition; end
+		if(message.tint)then SetTint(self, message.tint); end
+		if(message.custom)then self.maxSize = message.custom; end
+	end
+end

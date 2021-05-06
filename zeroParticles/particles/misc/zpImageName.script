@@ -1,0 +1,13 @@
+go.property("sprite", msg.url("#sprite"))
+
+function init(self)
+	self.msgs = require("zeroParticles/zpConsts")
+end
+
+function on_message(self, message_id, message, sender)
+	if(message_id == self.msgs.MSG_PARTICLE_OPTIONS)then
+		if(message.image)then
+			msg.post(self.sprite, "play_animation", { id = hash(message.image) });
+		end
+	end
+end

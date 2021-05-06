@@ -1,0 +1,55 @@
+go.property("fps", 10)
+go.property("sprite", msg.url("#sprite"))
+go.property("scale", 2)
+go.property("loop", false)
+
+local hash_cursor = hash("cursor")
+local constFrames = require("main/assets/graphics/frames/fx_Frames")
+
+local function InitPivots(self, pivots)
+	self.pivots = pivots;
+	self.framesCount = #self.pivots;
+	self.duration = self.framesCount * self.deltaFrame;
+end
+
+function init(self)
+	self.msgs = require("zeroParticles/zpConsts")
+	self.time = 0;
+	self.basePos = go.get_position(".");
+	self.pos = vmath.vector3();
+	go.set(self.sprite, hash("playback_rate"), 0);
+	go.set(self.sprite, "scale", vmath.vector3(self.scale, self.scale, 1))
+	self.deltaFrame = 1 / self.fps;
+	self.frameIndex = 1;
+end
+
+function update(self, dt)
+	self.time = self.time + dt;
+	if(self.time >= self.frameIndex * self.deltaFrame)then
+		self.frameIndex = self.frameIndex + 1;
+		if(self.frameIndex > self.framesCount)then
+			self.time = 0;
+			self.frameIndex = 1;
+			if(not self.loop)then
+				msg.post(".", "disable");
+			end
+		end
+		self.pos.x = self.pivots[self.frameIndex].x * self.scale + self.basePos.x;
+		self.pos.y = self.pivots[self.frameIndex].y * self.scale + self.basePos.y;
+		self.pos.z = self.basePos.z;
+		go.set_position( self.pos )
+		go.set(self.sprite, hash_cursor, self.time / self.duration);
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if(message_id == self.msgs.MSG_PARTICLE_OPTIONS)then
+		if(message.trimPivots)then
+			print("trimPivots");
+			InitPivots( self, message.trimPivots );
+		end
+		if(message.image)then
+			sprite.play_flipbook(self.sprite, hash(message.image), nil, {offset = 0, playback_rate = 0});
+		end
+	end
+end

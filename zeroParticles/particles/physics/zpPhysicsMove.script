@@ -1,0 +1,22 @@
+go.property("gravity", vmath.vector3())
+go.property("initMin", vmath.vector3(0, 0, 0))
+go.property("initMax", vmath.vector3(0, 0, 0))
+go.property("velocity", vmath.vector3())
+go.property("velRotate", false)
+
+function init(self)
+	self.msgs = require("zeroParticles/zpConsts");
+	self.velocity.x = self.initMin.x + (self.initMax.x - self.initMin.x) * math.random();
+	self.velocity.y = self.initMin.y + (self.initMax.y - self.initMin.y) * math.random();
+end
+
+function update(self, dt)
+	self.velocity = self.velocity + self.gravity * dt;
+	go.set_position(go.get_position() + self.velocity * dt);
+	if(self.velRotate)then
+		go.set_rotation(vmath.quat_rotation_z( math.atan2(self.velocity.y, self.velocity.x)));
+	end
+end
+
+function on_message(self, message_id, message, sender)
+end

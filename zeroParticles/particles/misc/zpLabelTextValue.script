@@ -1,0 +1,23 @@
+go.property("label", msg.url("#label"))
+
+local function SetColor(self, color)
+	go.set(self.label, "color", color);
+end
+
+local function SetScale(self, scale)
+	go.set_scale(scale);
+end
+
+function init(self)
+	self.msgs = require("zeroParticles/zpConsts")
+	SetColor(self, vmath.vector4(1, 1, 1, 0));
+	SetScale(self, vmath.vector3(1, 1, 1));
+end
+
+function on_message(self, message_id, message, sender)
+	if(message_id == self.msgs.MSG_PARTICLE_OPTIONS)then
+		if(message.value)then label.set_text(self.label, message.value); end
+		if(message.tint)then SetColor(self, message.tint); end
+		if(message.scale)then SetScale(self, message.scale); end
+	end
+end

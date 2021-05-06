@@ -1,0 +1,32 @@
+go.property("velocityScript", msg.url("#move"))
+go.property("minY", 0)
+go.property("maxY", 0)
+go.property("bounce", 1)
+go.property("borderFriction", 1)
+
+function init(self)
+	self.msgs = require("zeroParticles/zpConsts")
+	self.borderPosition = vmath.vector3(0, 0, 0);
+	self.y = math.random() * (self.maxY - self.minY) + self.minY;
+end
+
+function update(self, dt)
+	local pos = go.get_position();
+	-- bounce back logic
+	if(pos.y <= self.borderPosition.y + self.y)then
+		pos.y = self.borderPosition.y + self.y + (self.borderPosition.y + self.y - pos.y);
+		local velocity = go.get(self.velocityScript, "velocity");
+		velocity.y = -velocity.y * self.bounce;
+		velocity.x = velocity.x * (1 - self.borderFriction);
+		go.set_position(pos);
+		go.set(self.velocityScript, "velocity", velocity);
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if(message_id == self.msgs.MSG_PARTICLE_OPTIONS)then
+		if(message.emitterPosition)then
+			self.borderPosition = message.emitterPosition;
+		end
+	end
+end
