@@ -28,7 +28,7 @@ function M.shortInt(int, valuesCount)
 	local resultInt = int / suffix[suffix.use][1];
 	local decimals = resultInt - math.floor(resultInt);
 	decimals = math.floor(decimals * valuesPow) / valuesPow;
-	resultInt = math.floor(resultInt) + decimals;
+	resultInt = (math.floor(resultInt) + decimals) * suffix[suffix.use][1];
 	return {str = resultInt..""..suffix[suffix.use][2], int = resultInt, suffix = suffix[suffix.use][2]}
 end
 
