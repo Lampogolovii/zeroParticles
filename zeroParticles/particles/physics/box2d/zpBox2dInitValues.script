@@ -7,6 +7,6 @@ end
 
 function on_message(self, message_id, message, sender)
 	if(message_id == msgs.MSG_PARTICLE_OPTIONS)then
-		if(message.linearVelocity)then go.set(self.body, "linearVelocity", linearVelocity) end
+		if(message.linearVelocity)then go.set(self.body, "linear_velocity", message.linearVelocity) end
 	end
 end
