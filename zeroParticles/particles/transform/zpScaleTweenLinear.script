@@ -18,7 +18,7 @@ function init(self)
 	self.msgs = require("zeroParticles/zpConsts")
 	self.properties = {x = "scale.x", y = "scale.y"};
 
-	local constructor = require("zeroParticles/helpers/zpPLinearTween");
+	local constructor = require "zeroParticles/helpers/zpPLinearTween"
 	self.tweener = constructor.new( msg.url() );
 	self.tweener:setValues(self.startValue, self.inDuration, self.inValue, self.pauseDuration, self.outDuration, self.outValue);
 end

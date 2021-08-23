@@ -16,7 +16,7 @@ end
 function init(self)
 	self.msgs = require("zeroParticles/zpConsts")
 	
-	local constructor = require("zeroParticles/helpers/zpPLinearTween");
+	local constructor = require "zeroParticles/helpers/zpPLinearTween"
 	self.tweener = constructor.new( msg.url() );
 	self.tweener:setValues(self.startValue, self.inDuration, self.inValue, self.pauseDuration, self.outDuration, self.outValue);
 end
