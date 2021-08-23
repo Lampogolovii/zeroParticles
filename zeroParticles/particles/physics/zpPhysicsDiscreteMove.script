@@ -1,0 +1,35 @@
+go.property("gravity", vmath.vector3())
+go.property("initMin", vmath.vector3(0, 0, 0))
+go.property("initMax", vmath.vector3(0, 0, 0))
+go.property("cellsize", vmath.vector3())
+go.property("velocity", vmath.vector3())
+
+local function RandomVelocity(self)
+	self.velocity.x = self.initMin.x + (self.initMax.x - self.initMin.x) * math.random();
+	self.velocity.y = self.initMin.y + (self.initMax.y - self.initMin.y) * math.random();
+end
+
+function init(self)
+	self.msgs = require("zeroParticles/zpConsts");
+	self.pos = vmath.vector3(0, 0, 0);
+	self.visualPos = vmath.vector3(0, 0, 0);
+	RandomVelocity( self );
+end
+
+function update(self, dt)
+	self.velocity = self.velocity + self.gravity * dt;
+	self.pos = self.pos + self.velocity * dt;
+	self.visualPos.x = math.floor(self.pos.x / self.cellsize.x) * self.cellsize.x;
+	self.visualPos.y = math.floor(self.pos.y / self.cellsize.y) * self.cellsize.y;
+	go.set_position( self.visualPos );
+end
+
+function on_message(self, message_id, message, sender)
+	if(message_id == self.msgs.MSG_PARTICLE_INITED)then
+		self.pos = go.get_position();
+
+	elseif(message_id == self.msgs.MSG_PARTICLE_OPTIONS)then
+		if(message.minVelocity)then self.initMin = message.minVelocity; RandomVelocity( self ); end
+		if(message.maxVelocity)then self.initMax = message.maxVelocity; RandomVelocity( self ); end
+	end
+end

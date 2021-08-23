@@ -1,0 +1,27 @@
+go.property("position", vmath.vector3(0, 0, 0))
+go.property("size", vmath.vector3(100, 10, 0))
+
+function init(self)
+	self.msgs = require("zeroParticles/zpConsts")
+	self.pos = vmath.vector3();
+end
+
+function final(self)
+end
+
+function update(self, dt)
+end
+
+function on_message(self, message_id, message, sender)
+	if(message_id == self.msgs.MSG_CALCPOSITION)then
+		self.pos.x = self.size.x * (math.random() - 0.5);
+		self.pos.y = self.size.y * (math.random() - 0.5);
+		msg.post(sender, self.msgs.MSG_POSITIONCALCULATED, {position = self.position + self.pos, emitterData = message});
+	end
+end
+
+function on_input(self, action_id, action)
+end
+
+function on_reload(self)
+end

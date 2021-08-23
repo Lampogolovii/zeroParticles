@@ -2,7 +2,7 @@ go.property("gravity", vmath.vector3())
 go.property("initMin", vmath.vector3(0, 0, 0))
 go.property("initMax", vmath.vector3(0, 0, 0))
 go.property("velocity", vmath.vector3())
-go.property("velRotate", false)
+go.property("velRotate", false) -- particle rotates to velocity vector 
 
 function init(self)
 	self.msgs = require("zeroParticles/zpConsts");

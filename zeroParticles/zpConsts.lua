@@ -26,6 +26,7 @@ M.MSG_PARTICLE_BUILDERDATA = hash("particleBuilderData")
 -- custom (use your own data)
 -- tint (zpLabelTextValue, zpRectExpanding)
 -- scale (zpLabelTextValue)
+-- linearVelocity (zpBox2dInitValues)
 
 M.MSG_PARTICLE_OPTIONS = hash("particleOptions")
 
