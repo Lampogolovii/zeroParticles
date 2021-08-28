@@ -4,7 +4,6 @@ go.property("scale", 2)
 go.property("loop", false)
 
 local hash_cursor = hash("cursor")
-local constFrames = require("main/assets/graphics/frames/fx_Frames")
 
 local function InitPivots(self, pivots)
 	self.pivots = pivots;
