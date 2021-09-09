@@ -52,8 +52,10 @@ end
 function M.extSecondsToTimer( secondsCount )
 	local intSeconds = math.floor(secondsCount);
 	local mill = math.floor(secondsCount * 100 - intSeconds * 100);
-	local result = "00:";
-	result = result..((intSeconds < 10) and ("0"..intSeconds) or intSeconds).."."..((mill < 10) and ("0"..mill) or mill);
+	local result.str = "00:";
+	result.str = result..((intSeconds < 10) and ("0"..intSeconds) or intSeconds).."."..((mill < 10) and ("0"..mill) or mill);
+	result.intSeconds = intSeconds;
+	result.intMilliseconds = mill;
 	return result
 end
 
